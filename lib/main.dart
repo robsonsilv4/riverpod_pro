@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'number_state_notifier.dart';
 import 'numbers_change_notifier.dart';
+import 'numbers_state_notifier.dart';
 
 void main() {
   runApp(

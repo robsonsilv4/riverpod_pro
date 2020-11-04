@@ -27,14 +27,27 @@ final numberProvider = Provider<int>((ref) {
   return 10;
 });
 
+final numberStateProvider = StateProvider<int>((ref) {
+  return 11;
+});
+
 class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final number = watch(numberProvider);
+    final numberState = watch(numberStateProvider).state;
+
+    void increment(BuildContext context) {
+      context.read(numberStateProvider).state++;
+    }
 
     return Scaffold(
       body: Center(
-        child: Text(number.toString()),
+        child: Text(numberState.toString()),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => increment(context),
       ),
     );
   }

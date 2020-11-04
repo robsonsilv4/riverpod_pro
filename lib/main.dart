@@ -27,17 +27,14 @@ final numberProvider = Provider<int>((ref) {
   return 10;
 });
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
+    final number = watch(numberProvider);
+
     return Scaffold(
       body: Center(
-        child: Consumer(
-          builder: (context, watch, child) {
-            final number = watch(numberProvider);
-            return Text(number.toString());
-          },
-        ),
+        child: Text(number.toString()),
       ),
     );
   }

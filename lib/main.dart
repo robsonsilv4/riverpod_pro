@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(),
+      home: FutureHomePage(),
     );
   }
 }
@@ -44,6 +44,14 @@ final numbersChangeNotifierProvider =
   return NumbersChangeNotifier();
 });
 
+final numberFutureProvider = FutureProvider<int>((ref) {
+  return Future.value(29);
+});
+
+final numberStreamProvider = StreamProvider<int>((ref) {
+  return Stream.value(29);
+});
+
 class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
@@ -64,6 +72,24 @@ class MyHomePage extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => numbersChangeNotifier.add(1),
+      ),
+    );
+  }
+}
+
+class FutureHomePage extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, ScopedReader watch) {
+    final futureNumber = watch(numberFutureProvider);
+    final streamNumber = watch(numberStreamProvider);
+
+    return Scaffold(
+      body: Center(
+        child: streamNumber.when(
+          data: (data) => Text(data.toString()),
+          loading: () => CircularProgressIndicator(),
+          error: (error, stackTrace) => Container(),
+        ),
       ),
     );
   }

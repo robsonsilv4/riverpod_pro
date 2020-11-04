@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: FutureHomePage(),
+      home: ScopedHomePage(),
     );
   }
 }
@@ -50,6 +50,10 @@ final numberFutureProvider = FutureProvider<int>((ref) {
 
 final numberStreamProvider = StreamProvider<int>((ref) {
   return Stream.value(29);
+});
+
+final numberScopedProvider = ScopedProvider<int>((ref) {
+  throw UnimplementedError();
 });
 
 class MyHomePage extends ConsumerWidget {
@@ -90,6 +94,31 @@ class FutureHomePage extends ConsumerWidget {
           loading: () => CircularProgressIndicator(),
           error: (error, stackTrace) => Container(),
         ),
+      ),
+    );
+  }
+}
+
+class ScopedHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ProviderScope(
+      overrides: [
+        numberScopedProvider.overrideWithValue(30),
+      ],
+      child: DetailsPage(),
+    );
+  }
+}
+
+class DetailsPage extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, ScopedReader watch) {
+    final scopedNumber = watch(numberScopedProvider);
+
+    return Scaffold(
+      body: Center(
+        child: Text(scopedNumber.toString()),
       ),
     );
   }

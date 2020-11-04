@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: ScopedHomePage(),
+      home: FutureHomePage(),
     );
   }
 }
@@ -44,12 +44,15 @@ final numbersChangeNotifierProvider =
   return NumbersChangeNotifier();
 });
 
-final numberFutureProvider = FutureProvider<int>((ref) {
+final numberFutureProvider = FutureProvider.autoDispose<int>((ref) {
   return Future.value(29);
 });
 
-final numberStreamProvider = StreamProvider<int>((ref) {
-  return Stream.value(29);
+final numberStreamProvider = StreamProvider.autoDispose.family<int, int>((
+  ref,
+  extraNumber,
+) {
+  return Stream.value(29 + extraNumber);
 });
 
 final numberScopedProvider = ScopedProvider<int>((ref) {
@@ -85,7 +88,7 @@ class FutureHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final futureNumber = watch(numberFutureProvider);
-    final streamNumber = watch(numberStreamProvider);
+    final streamNumber = watch(numberStreamProvider(08));
 
     return Scaffold(
       body: Center(
